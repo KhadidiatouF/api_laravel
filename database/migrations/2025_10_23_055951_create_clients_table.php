@@ -7,24 +7,20 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            // UUID comme clé primaire
+        Schema::create('clients', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('telephone')->nullable();
+            $table->string('telephone')->unique()->index();
+            $table->string('email')->unique()->index();
             $table->string('adresse')->nullable();
-            $table->enum('type', ['admin', 'client'])->default('client');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
+            $table->index(['nom', 'prenom']); // utile si tu fais souvent des recherches sur le nom complet
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('clients');
     }
 };
